@@ -20,6 +20,7 @@ def testSub():
     global q
     proto = ['http','https']
     while True:
+        # Get one subdomain name from the queue to test 
         subdomain = q.get()
         try:
             # Loop the range of protocols (HTTP and HTTPS)
@@ -36,31 +37,51 @@ def testSub():
 def goingForTheKill():
     global q
 
+    # Test if the wordlist file exists
     if os.path.exists(wordlistFile):
+        # Open the wordlist
         with open(wordlistFile,"r") as fd:
-            for line in fd:                    
+            # Read each line of the file
+            for line in fd:
+                # Remove spaces and newlines       
                 line = line.replace("\r","").replace("\n","").replace(" ","")
+                # Add the line to the queue
                 q.put(line)
+    # If the file doesn't exist
     else:
+        # Print this message to the user
         print("Wordlist doesn't exist.")
-
-    try:
-        for i in range(numberOfThreads):
-            t = threading.Thread(target=testSub, daemon=True)
-            t.start()
-
-        while not q.empty():
-            print(str(q.qsize()) + " attempts left.", end="\r")
-
-    except KeyboardInterrupt:
+        # And exit the tool
         sys.exit()
 
+    try:
+        # Loop until create N threads (default: 10 threads)
+        for i in range(numberOfThreads):
+            # Define the thread as a daemon
+            t = threading.Thread(target=testSub, daemon=True)
+            # Start the thread
+            t.start()
 
+        # While there is names on the queue waiting to be testes
+        while not q.empty():
+            # Print on the screen how many names are left to be testes
+            print(str(q.qsize()) + " attempts left.", end="\r")
+
+    # On error
+    except :
+        # Print this message
+        print("Error when creating the threads.")
+        # Exit
+        sys.exit()
+
+# If this function is called
 def signal_handler(signal, frame):
+    # Exit the tool
     sys.exit()
 
 def main(argv):
     global targetDomain, wordlistFile, excludeReturn, numberOfThreads
+    # If CTRL + C call signal_handler function
     signal.signal(signal.SIGINT, signal_handler)
 
     # t = target; w = wordlist; h = help; T = Threads; x = exclude
@@ -83,14 +104,18 @@ def main(argv):
             for i in arg.split(","):
                 excludeReturn.append(i)
 
+    # Target domain and Wordlist are mandatory
     if not targetDomain or not wordlistFile:
         show_help()
 
     goingForTheKill()
 
 if __name__ == '__main__':
+    # If the tool was called without parameters
     if len(sys.argv) < 2:
+        # Print the usage
         show_help()
     
+    # Let's start the process
     main(sys.argv[1:])
         
