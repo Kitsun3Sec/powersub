@@ -46,6 +46,7 @@ def goingForTheKill():
                 thread = threading.Thread(target = testSub, args = (q.get(),))
                 threads.append(thread)
                 thread.start()
+                print(str(q.qsize()) + " attempts left.", end="\r")
         for t in threads:
             t.join()
     
