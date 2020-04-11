@@ -9,6 +9,7 @@ wordlistFile = ''       # Placeholder for the wordlist file
 excludeReturn = ['404'] # HTTP Status Code to be ignored
 numberOfThreads = 10    # Default number of concurrent threads
 q = queue.Queue()       # The wordlist will be put on this queue
+proto = ['http','https']
 
 kitsun3 = '''
                 &&                         &&               
@@ -49,10 +50,19 @@ def show_help():
     print('\t-h\tThis help')
     sys.exit()
 
+def domainExists():
+    try:
+        for p in range(len(proto)):
+            r = requests.get(proto[p] + '://' + targetDomain, timeout=(1,3))
+            if r.status_code == 200:
+                return 1
+    except:
+        pass
+    return 0
+
 # Try to connect to HTTP port 80 and 443 in order to test for the existence of the subdomain
 def testSub():
     global q
-    proto = ['http','https']
     while True:
         # Get one subdomain name from the queue to test 
         subdomain = q.get()
@@ -142,7 +152,11 @@ def main(argv):
     if not targetDomain or not wordlistFile:
         show_help()
 
-    goingForTheKill()
+    if domainExists():
+        goingForTheKill()
+    else:
+        print("I was not able to reach the domain. Does it really exist?")
+        sys.exit()
 
 if __name__ == '__main__':
     # If the tool was called without parameters
