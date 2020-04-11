@@ -10,9 +10,43 @@ excludeReturn = ['404'] # HTTP Status Code to be ignored
 numberOfThreads = 10    # Default number of concurrent threads
 q = queue.Queue()       # The wordlist will be put on this queue
 
+kitsun3 = '''
+                &&                         &&               
+              &&&&&&&                    &&&&&&             
+            #&&&&&&&&                    &&&&&&&            
+            &&&. .&&&&                  &&&. .&&&           
+           &&&&   &&&&&               &&&&&   &&&&          
+           &&&..  ,%&&&& %%%%%%%%%%% &&&&&,  ..&&&          
+          &%%%..* *#%%%%*************%%%%%* *..%%%          
+        %%%%%%.*******************************.%%%%%%       
+        %,..**************************************..%       
+         %*.***************************************%        
+       %%.(#.*************,*******,*************.,(.%%      
+       %..,,.*.****((****, ,*****, ,****/#****.*..,..%      
+         %*...*****%&&*****************#&&*****...*%        
+        %%%%%%..****(&&***************&&%****..%%%%%%       
+         %*......******&*************&/*****......*%        
+              %###..,********************,.###%             
+                    %%.***************.(&                   
+                       %.***********.%                      
+                        %.*********.%                       
+                          #.&&&&&.#                         
+                            %%%%%                           
+'''
+
+
 # Help function
 def show_help():
-    print("Help here...")
+    print(kitsun3)
+    print("\n\t\t\t-= Kitsun3Sec =-")
+    print("\nPowerSub: Offline subdomain enumeration")
+    print('\nUSAGE: python ' + sys.argv[0] + ' -t <targetdomain> -w <wordlist> [-x <status Code> -T <threads>]')
+    print('\nOPTIONS')
+    print('\t-t\tTarget domain to enumerate for its subdomains')
+    print('\t-w\tWordlist - file with the list of names to test')
+    print('\t-x\tAdd HTTP Status code to the ignore list. Default: 404')
+    print('\t-T\tNumber of threads. Default: 10')
+    print('\t-h\tThis help')
     sys.exit()
 
 # Try to connect to HTTP port 80 and 443 in order to test for the existence of the subdomain
